@@ -20,13 +20,13 @@ sudo helm init --service-account tiller --wait
 kubectl create clusterrolebinding cluster-admin-binding --clusterrole cluster-admin --user $(gcloud config get-value account)
 
 # Install nginx-ingress
-sudo helm install stable/nginx-ingress --name nginx-ingress --set rbac.create=true --set controller.service.loadBalancerIP=$STATIC_IP
+helm install stable/nginx-ingress --name nginx-ingress --set rbac.create=true --set controller.service.loadBalancerIP=$STATIC_IP
 
 # -------------------------------
 # Setup cert-manager
 # --------------------------------
 
-kubectl apply -f https://raw.githubusercontent.com/jetstack/cert-manager/release-0.10/deploy/manifests/00-crds.yaml
+kubectl apply --validate=false -f https://raw.githubusercontent.com/jetstack/cert-manager/release-0.11/deploy/manifests/00-crds.yaml
 
 # Create the namespace for cert-manager
 kubectl create namespace cert-manager
@@ -44,7 +44,7 @@ helm repo update
 helm install \
   --name cert-manager \
   --namespace cert-manager \
-  --version v0.10.0 \
+  --version v0.11.0 \
   jetstack/cert-manager
 
 
